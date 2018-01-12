@@ -1,4 +1,5 @@
 const debug = require('debug')('node-red-contrib-bitio-wrapper');
+const fs = require('fs');
 const { spawn } = require('child_process');
 
 function executeMicrobitCommand(wordsToSay){
@@ -42,10 +43,14 @@ function executeMicrobitCommand(wordsToSay){
 module.exports = function(RED) {
 		
 	function bitio(config) {
-		
+
 		RED.nodes.createNode(this, config);
-		
+
 		var node = this;
+
+        if(config.serialport !== ''){
+            fs.writeFileSync(`${__dirname}/portscan.cache`, config.serialport + '\n');
+        }
 
 		node.on('input', function(msg) {
 
