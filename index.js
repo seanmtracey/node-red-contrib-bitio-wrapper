@@ -1,16 +1,19 @@
-const debug = require('debug');
+const debug = require('debug')('node-red-contrib-bitio-wrapper');
 const { spawn } = require('child_process');
 
-function executeMicrobitCommand(command, options){
+function executeMicrobitCommand(wordsToSay){
 
 	return new Promise( (resolve, reject) => {
 
 		const arguments = [
-			'execute.py',
+			`${__dirname}/execute.py`,
+			__dirname,
 			`scrolling-text`,
-			"Hello!"
+			wordsToSay
 		];
 		
+		console.log(arguments);
+
 		const microbitProcess = spawn('python', arguments);
 
 		microbitProcess.stdout.on('data', (data) => {
@@ -43,16 +46,22 @@ module.exports = function(RED) {
 		RED.nodes.createNode(this, config);
 		
 		var node = this;
-		
+
 		node.on('input', function(msg) {
-			/*msg.payload = msg.payload.toLowerCase();
-			node.send(msg);*/
+
+			console.log('INPUT:', msg);
+			executeMicrobitCommand(msg.payload.toString())
+				.then(d => {
+					console.log(d);
+					node.send(msg);
+				})
+				.catch(e => console.log('err:', e))
+			;
+
 		});
 		
 	}
 		
-	RED.nodes.registerType("bitio", bitio);
+	RED.nodes.registerType("bitio-wrapper", bitio);
 
 }
-
-executeMicrobitCommand();

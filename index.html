@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    RED.nodes.registerType('bitio-wrapper',{
+        category: 'function',
+        color: '#34b6ff',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:0,
+        icon: "icon.png",
+        label: function() {
+            return this.name||"bitio-wrapper";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bitio-wrapper">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-serialport"><i class="icon-tag"></i>Microbit Serial Port</label>
+        <input type="text" id="node-input-serialport" placeholder="/dev/tty.usbmodemXXXX">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="bitio-wrapper">
+    <p>A wrapper for the <a href="https://github.com/whaleygeek/bitio/">Bitio Python library</a> written by <a href="https://twitter.com/whaleygeek">David Whale</a>.</p>
+</script>
