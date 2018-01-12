@@ -20,5 +20,14 @@
   "bugs": {
     "url": "https://github.com/seanmtracey/node-red-bitio-wrapper/issues"
   },
-  "homepage": "https://github.com/seanmtracey/node-red-bitio-wrapper#readme"
+  "homepage": "https://github.com/seanmtracey/node-red-bitio-wrapper#readme",
+  "node-red": {
+    "nodes": {
+      "bitio": "index.js"
+    }
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "escape-string-regexp": "^1.0.5"
+  }
 }
