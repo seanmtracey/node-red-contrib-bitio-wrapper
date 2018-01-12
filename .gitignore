@@ -3,3 +3,4 @@ node_modules/*
 *.pyc
 *.pycache
 notes.md
+.vscode
