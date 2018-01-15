@@ -1,32 +1,38 @@
-const debug = require('debug')('node-red-contrib-bitio-wrapper');
+const debug = require('debug')('node-red-contrib-bitio-string');
 const fs = require('fs');
 const { spawn } = require('child_process');
 
-function executeMicrobitCommand(wordsToSay){
+const jobs = [];
+
+let processRunning = false;
+
+function executeMicrobitCommand(dataToPass, functionType = 'scrolling-text'){
 
 	return new Promise( (resolve, reject) => {
 
 		const arguments = [
 			`${__dirname}/execute.py`,
 			__dirname,
-			`scrolling-text`,
-			wordsToSay
+			functionType,
+			dataToPass
 		];
-		
-		console.log(arguments);
+        
+        console.log(dataToPass);
+
+		console.log(arguments.join(' '));
 
 		const microbitProcess = spawn('python', arguments);
 
 		microbitProcess.stdout.on('data', (data) => {
-			console.log(`node-red-contrib-bitio-wrapper: stdout: ${data}`);
+			console.log(`node-red-contrib-bitio-string: stdout: ${data}`);
 		});
 		
 		microbitProcess.stderr.on('data', (data) => {
-			console.log(`node-red-contrib-bitio-wrapper: stderr: ${data}`);
+			console.log(`node-red-contrib-bitio-string: stderr: ${data}`);
 		});
 		
 		microbitProcess.on('close', (code) => {
-			console.log(`node-red-contrib-bitio-wrapper: child process exited with code ${code}`);
+			console.log(`node-red-contrib-bitio-string: child process exited with code ${code}`);
 
 			if(code === 0){
 				resolve();
@@ -40,33 +46,71 @@ function executeMicrobitCommand(wordsToSay){
 
 }
 
+function runJob(node){
+
+    const currentJob = jobs.shift();    
+    processRunning = true;
+
+    const isBitIoImage = !!currentJob.payload.bitio_image;
+    
+    const dataToSend = isBitIoImage ? currentJob.payload.image : currentJob.payload.toString();
+    const jobType = isBitIoImage ? 'image' : 'scrolling-text';
+
+    console.log('jobType', jobType);
+
+    executeMicrobitCommand(dataToSend, jobType)
+        .then(d => {
+
+            console.log(d);
+            node.send(currentJob);
+
+            processRunning = false;
+
+            if(!processRunning && jobs.length > 0){
+                runJob(node);
+            }
+
+        })
+        .catch(e => {
+            console.log('err:', e);
+
+            processRunning = false;
+
+            if(!processRunning && jobs.length > 0){
+                runJob(node);
+            }
+
+        })
+    ;
+
+}
+
 module.exports = function(RED) {
-		
-	function bitio(config) {
 
-		RED.nodes.createNode(this, config);
+    function handleBitioInput(config) {
 
-		var node = this;
-
+        RED.nodes.createNode(this, config);
+    
+        var node = this;
+    
         if(config.serialport !== ''){
             fs.writeFileSync(`${__dirname}/portscan.cache`, config.serialport + '\n');
         }
+    
+        node.on('input', function(msg) {
+    
+            console.log('INPUT:', msg);
+    
+            jobs.push(msg);
+    
+            if(!processRunning && jobs.length > 0){
+                runJob(node);
+            }
+    
+        });
+        
+    }
 
-		node.on('input', function(msg) {
-
-			console.log('INPUT:', msg);
-			executeMicrobitCommand(msg.payload.toString())
-				.then(d => {
-					console.log(d);
-					node.send(msg);
-				})
-				.catch(e => console.log('err:', e))
-			;
-
-		});
-		
-	}
-		
-	RED.nodes.registerType("bitio-wrapper", bitio);
+	RED.nodes.registerType("bitio-input", handleBitioInput);
 
 }

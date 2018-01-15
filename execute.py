@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, time
 os.chdir(sys.argv[1])
 
 import microbit
@@ -8,4 +8,9 @@ VALUE = sys.argv[3]
 
 print(FUNCTION, VALUE)
 
-microbit.display.scroll(VALUE)
+if FUNCTION == 'scrolling-text':
+    microbit.display.scroll(VALUE)
+
+elif FUNCTION == 'image':
+    microbit.display.show(microbit.Image(VALUE))
+    time.sleep(3)

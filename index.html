@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('bitio-wrapper',{
+    RED.nodes.registerType('bitio-input',{
         category: 'function',
         color: '#34b6ff',
         defaults: {
@@ -14,12 +14,13 @@
         outputs:0,
         icon: "icon.png",
         label: function() {
-            return this.name||"bitio-wrapper";
+            return this.name || "bitio-input";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="bitio-wrapper">
+<script type="text/x-red" data-template-name="bitio-input">
+   
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -32,6 +33,6 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="bitio-wrapper">
+<script type="text/x-red" data-help-name="bitio-input">
     <p>A wrapper for the <a href="https://github.com/whaleygeek/bitio/">Bitio Python library</a> written by <a href="https://twitter.com/whaleygeek">David Whale</a>.</p>
 </script>
