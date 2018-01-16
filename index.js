@@ -87,6 +87,7 @@ function runJob(node){
 
 module.exports = function(RED) {
 
+    // Node for handling sending data to the bitio device.
     function handleBitioInput(config) {
 
         RED.nodes.createNode(this, config);
@@ -112,9 +113,9 @@ module.exports = function(RED) {
     }
 
     RED.nodes.registerType("bitio-input", handleBitioInput);
-    
 
 
+    // Node for creating 5x5 images in the node-red UI.
     function createMicrobitImage(config) {
 
         RED.nodes.createNode(this, config);
