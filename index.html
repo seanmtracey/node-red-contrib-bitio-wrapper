@@ -1,3 +1,4 @@
+<!--bitio-input node for talking to a Micro:bit-->
 <script type="text/javascript">
     RED.nodes.registerType('bitio-input',{
         category: 'function',
@@ -34,5 +35,183 @@
 </script>
 
 <script type="text/x-red" data-help-name="bitio-input">
+    <p>A wrapper for the <a href="https://github.com/whaleygeek/bitio/">Bitio Python library</a> written by <a href="https://twitter.com/whaleygeek">David Whale</a>.</p>
+</script>
+
+<!--bitio-image node for creating a custom image to display on the Microbit-->
+<script type="text/javascript">
+    RED.nodes.registerType('bitio-image',{
+        category: 'function',
+        color: '#34b6ff',
+        defaults: {
+            name: {
+                value:""
+            },
+            image : {
+                value : ""
+            },
+            displayFor : {
+                value : 3
+            }
+        },
+        inputs:0,
+        outputs:1,
+        icon: "icon.png",
+        label: function() {
+            return this.name || "bitio-image";
+        },
+        button : {
+            enabled : true,
+            onclick : function(){
+                console.log('Button clicked!');
+
+                var node = this;
+
+                $.ajax({
+                    url: "inject/"+this.id,
+                    type:"POST",
+                    success: function(resp) {
+                        // RED.notify(node._("inject.success",{label:label}),"success");
+                        console.log('Injected. Resp:', resp);
+                    },
+                    error: function(jqXHR,textStatus,errorThrown) {
+                        if (jqXHR.status == 404) {
+                            console.log('err:', node._("common.notification.error",{message:node._("common.notification.errors.not-deployed")}),"error");
+                        } else if (jqXHR.status == 500) {
+                            console.log('err:', node._("common.notification.error",{message:node._("inject.errors.failed")}),"error");
+                        } else if (jqXHR.status == 0) {
+                            console.log('err:', node._("common.notification.error",{message:node._("common.notification.errors.no-response")}),"error");
+                        } else {
+                            console.log('err:', node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:jqXHR.status,message:textStatus})}),"error");
+                        }
+                    }
+                });
+
+            }
+        },
+        oneditprepare : function(){
+            console.log(this);
+            const LEDs = Array.from( document.querySelectorAll('.microbit-image input[type="checkbox"]'));
+
+            this.image.replace(/:/g, '').split('').forEach(function(value, idx){
+                console.log(value);
+
+                if(value === "9") {
+                    LEDs[idx].checked = true;
+                }
+
+            });
+
+        },
+        oneditsave: function(){
+
+            const inputElement = document.querySelector('#node-input-image');
+            const LEDs = Array.from( document.querySelectorAll('.microbit-image input[type="checkbox"]')) ;
+
+            const ledValues = LEDs.map( function( checkboxElement, idx ) {
+
+                return (checkboxElement.checked ? "9" : "0") + ( (idx + 1) % 5 === 0 && idx !== LEDs.length - 1 ? ":" : "" );
+
+            } ).join('');
+            
+            console.log(ledValues);
+            inputElement.value = ledValues;
+
+            this.payload.value = ledValues;
+
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="bitio-image">
+
+    <style>
+
+        .microbit-image{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .microbit-image input[type="checkbox"]{
+            -webkit-appearance: button;
+            border: 1px solid #791a1a;
+            width: 30px;
+            height: 30px;
+            margin: 0.5em;
+            border-radius: 5px;
+            outline: transparent;
+        }
+
+        .microbit-image input[type="checkbox"]:checked{
+            background: #ff6161;
+        }
+
+        .microbit-image span{
+            flex-basis: 100%;
+        }
+
+    </style>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+
+        <label for="node-input-displayFor">Display time (in seconds)</label>
+        <input type="number" id="node-input-displayFor" value="3"/>
+        
+        <label for="node-input-image">Pattern</label>
+        <input type="hidden" id="node-input-image" value="">
+        
+        <div class="microbit-image">
+
+            <!--First row-->
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <span></span>
+
+            <!--Second row-->
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <span></span>
+
+            <!--Third row-->
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <span></span>
+
+            <!--Fourth row-->
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <span></span>
+
+            <!--Fifth row-->
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+            <input type="checkbox" />
+
+        </div>
+
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="bitio-image">
     <p>A wrapper for the <a href="https://github.com/whaleygeek/bitio/">Bitio Python library</a> written by <a href="https://twitter.com/whaleygeek">David Whale</a>.</p>
 </script>

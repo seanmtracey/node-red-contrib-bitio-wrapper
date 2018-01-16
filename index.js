@@ -6,7 +6,7 @@ const jobs = [];
 
 let processRunning = false;
 
-function executeMicrobitCommand(dataToPass, functionType = 'scrolling-text'){
+function executeMicrobitCommand(dataToPass, functionType = 'scrolling-text', timeToDisplay = 3){
 
 	return new Promise( (resolve, reject) => {
 
@@ -14,7 +14,8 @@ function executeMicrobitCommand(dataToPass, functionType = 'scrolling-text'){
 			`${__dirname}/execute.py`,
 			__dirname,
 			functionType,
-			dataToPass
+            dataToPass,
+            timeToDisplay
 		];
         
         console.log(dataToPass);
@@ -58,10 +59,9 @@ function runJob(node){
 
     console.log('jobType', jobType);
 
-    executeMicrobitCommand(dataToSend, jobType)
-        .then(d => {
+    executeMicrobitCommand(dataToSend, jobType, currentJob.payload.displayFor)
+        .then(function(){
 
-            console.log(d);
             node.send(currentJob);
 
             processRunning = false;
@@ -92,7 +92,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
     
         var node = this;
-    
+        
         if(config.serialport !== ''){
             fs.writeFileSync(`${__dirname}/portscan.cache`, config.serialport + '\n');
         }
@@ -111,6 +111,31 @@ module.exports = function(RED) {
         
     }
 
-	RED.nodes.registerType("bitio-input", handleBitioInput);
+    RED.nodes.registerType("bitio-input", handleBitioInput);
+    
+
+
+    function createMicrobitImage(config) {
+
+        RED.nodes.createNode(this, config);
+    
+        var node = this;
+    
+        node.on('input', function(msg) {
+    
+            console.log('IMAGE-INPUT:', config);
+            
+            msg.payload = {};
+            msg.payload.bitio_image = true;
+            msg.payload.image = config.image;
+            msg.payload.displayFor = config.displayFor;
+
+            node.send(msg);
+    
+        });
+        
+    }
+
+    RED.nodes.registerType("bitio-image", createMicrobitImage);
 
 }

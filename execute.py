@@ -5,6 +5,7 @@ import microbit
 
 FUNCTION = sys.argv[2]
 VALUE = sys.argv[3]
+TIME_TO_DISPLAY = sys.argv[4]
 
 print(FUNCTION, VALUE)
 
@@ -13,4 +14,4 @@ if FUNCTION == 'scrolling-text':
 
 elif FUNCTION == 'image':
     microbit.display.show(microbit.Image(VALUE))
-    time.sleep(3)
+    time.sleep(TIME_TO_DISPLAY)
