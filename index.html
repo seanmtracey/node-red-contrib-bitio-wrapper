@@ -130,16 +130,19 @@
         .microbit-image{
             display: flex;
             flex-wrap: wrap;
+            padding: 2em;
         }
 
         .microbit-image input[type="checkbox"]{
-            -webkit-appearance: button;
             border: 1px solid #791a1a;
             width: 30px;
             height: 30px;
             margin: 0.5em;
             border-radius: 5px;
             outline: transparent;
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            appearance: button;
         }
 
         .microbit-image input[type="checkbox"]:checked{
@@ -162,6 +165,8 @@
         <label for="node-input-displayFor">Display time (in seconds)</label>
         <input type="number" id="node-input-displayFor" value="3"/>
         
+        <br />
+
         <label for="node-input-image">Pattern</label>
         <input type="hidden" id="node-input-image" value="">
         
