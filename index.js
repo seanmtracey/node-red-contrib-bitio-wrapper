@@ -1,6 +1,7 @@
 const debug = require('debug')('node-red-contrib-bitio-string');
 const fs = require('fs');
 const { spawn } = require('child_process');
+const SerialPort = require('serialport');
 
 const jobs = [];
 
@@ -138,5 +139,17 @@ module.exports = function(RED) {
     }
 
     RED.nodes.registerType("bitio-image", createMicrobitImage);
+
+    RED.httpAdmin.post("/serialports", RED.auth.needsPermission("inject.write"), function(req,res) {
+        
+        SerialPort.list()
+            .then(devices => {
+                const portNames = devices.map(device => device.comName);
+                res.send( JSON.stringify( { ports : portNames }) );
+            })
+            .catch(err => console.log(err))
+        ;
+
+    });
 
 }

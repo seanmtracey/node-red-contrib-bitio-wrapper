@@ -16,6 +16,45 @@
         icon: "icon.png",
         label: function() {
             return this.name || "bitio-input";
+        },
+        oneditprepare : function(){
+            var node = this;
+            $.ajax( { 
+                url : 'serialports', 
+                type : 'POST',
+                success : function(resp){
+                    console.log(JSON.parse(resp));
+                    var select = document.querySelector('#pseudo-input-for-serial');
+                    var availalePorts = JSON.parse(resp).ports;
+
+                    console.log(node);
+
+                    var selectFrag = document.createDocumentFragment();
+
+                    availalePorts.forEach(function(port){
+                        var option = document.createElement('option');
+                        option.value = port;
+                        option.textContent = port;
+
+                        if(port === node.serialport){
+                            option.selected = true;
+                        }
+
+                        selectFrag.appendChild(option);
+                    });
+
+                    select.appendChild(selectFrag);
+
+                    select.addEventListener('change', function(e){
+                        console.log('CHANGE!', this.value);
+                        $('#node-input-serialport').val(this.value);
+                    });
+
+                },
+                error : function(jqXHR,textStatus,errorThrown){
+                    console.log(jqXHR,textStatus,errorThrown);
+                }
+            })
         }
     });
 </script>
@@ -29,7 +68,12 @@
 
     <div class="form-row">
         <label for="node-input-serialport"><i class="icon-tag"></i>Microbit Serial Port</label>
-        <input type="text" id="node-input-serialport" placeholder="/dev/tty.usbmodemXXXX">
+        <input type="hidden" id="node-input-serialport" placeholder="/dev/tty.usbmodemXXXX" />
+
+        <select id="pseudo-input-for-serial">
+                <!--<option value="/dev/tty.usbmodemXXXX">/dev/tty.usbmodemXXXX</option>-->
+        </select>
+
     </div>
 
 </script>
@@ -71,8 +115,8 @@
                     url: "inject/"+this.id,
                     type:"POST",
                     success: function(resp) {
-                        // RED.notify(node._("inject.success",{label:label}),"success");
                         console.log('Injected. Resp:', resp);
+                        RED.notify(node._("bitio-image: Successful injection.",{ label : this.name || 'bitio-image'}),"success");
                     },
                     error: function(jqXHR,textStatus,errorThrown) {
                         if (jqXHR.status == 404) {
