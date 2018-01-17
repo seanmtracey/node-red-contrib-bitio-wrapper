@@ -5,7 +5,7 @@ import microbit
 
 FUNCTION = sys.argv[2]
 VALUE = sys.argv[3]
-TIME_TO_DISPLAY = sys.argv[4]
+TIME_TO_DISPLAY = float(sys.argv[4])
 
 print(FUNCTION, VALUE)
 
