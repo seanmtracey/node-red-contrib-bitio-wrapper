@@ -21,7 +21,7 @@ Before you can connect to the Microbit, you need to configure the serial port to
 
 1. Double-click on the `bitio-input` node to open the configuration panel
 2. Click on the serial port dropdown
-3. Select the port that your microbit is connected on. On a Mac, it should be something like /dev/tty.usbmodemXXXX. On a Raspberry Pi, it should be something like /dev/ttyACA0.
+3. Select the port that your microbit is connected on. On a Mac, it should be something like **/dev/tty.usbmodemXXXX**. On a Raspberry Pi, it should be something like **/dev/ttyACA0**.
 4. Click done and deploy your changes.
 
 #### Sending text
