@@ -102,6 +102,8 @@ module.exports = function(RED) {
         node.on('input', function(msg) {
     
             console.log('INPUT:', msg);
+            console.log(`There are ${jobs.length} that need to complete before this job is run.`);
+            console.log(`Adding job to queue`);
     
             jobs.push(msg);
     
@@ -147,7 +149,7 @@ module.exports = function(RED) {
                 const portNames = devices.map(device => device.comName);
                 res.send( JSON.stringify( { ports : portNames }) );
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log('There was an error getting the serial ports on this system:', err))
         ;
 
     });
