@@ -37,7 +37,7 @@ To have text scroll across the Microbit LED display, pass a string as the value 
 
 To set an LED on the Microbit display to on or off, you can pass an object like the following to the bitio-input node:
 
-```JSON
+```JavaScript
 {
     "payload": { 
         "bitio_image" : true, // If this value is not set, the image will not be displayed
