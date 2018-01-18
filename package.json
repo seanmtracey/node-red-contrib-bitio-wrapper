@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seanmtracey/node-red-bitio-wrapper.git"
+    "url": "git+https://github.com/seanmtracey/node-red-contrib-bitio-wrapper.git"
   },
   "keywords": [
     "bitio",
@@ -18,9 +18,9 @@
   "author": "Sean M. Tracey, David Whale",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/seanmtracey/node-red-bitio-wrapper/issues"
+    "url": "https://github.com/seanmtracey/node-red-contrib-bitio-wrapper/issues"
   },
-  "homepage": "https://github.com/seanmtracey/node-red-bitio-wrapper#readme",
+  "homepage": "https://github.com/seanmtracey/node-red-contrib-bitio-wrapper#readme",
   "node-red": {
     "nodes": {
       "bitio": "index.js"
