@@ -19,22 +19,22 @@ function executeMicrobitCommand(dataToPass, functionType = 'scrolling-text', tim
             timeToDisplay
 		];
         
-        console.log(dataToPass);
+        debug(dataToPass);
 
-		console.log(arguments.join(' '));
+		debug(arguments.join(' '));
 
 		const microbitProcess = spawn('python', arguments);
 
 		microbitProcess.stdout.on('data', (data) => {
-			console.log(`node-red-contrib-bitio-string: stdout: ${data}`);
+			debug(`node-red-contrib-bitio-string: stdout: ${data}`);
 		});
 		
 		microbitProcess.stderr.on('data', (data) => {
-			console.log(`node-red-contrib-bitio-string: stderr: ${data}`);
+			debug(`node-red-contrib-bitio-string: stderr: ${data}`);
 		});
 		
 		microbitProcess.on('close', (code) => {
-			console.log(`node-red-contrib-bitio-string: child process exited with code ${code}`);
+			debug(`node-red-contrib-bitio-string: child process exited with code ${code}`);
 
 			if(code === 0){
 				resolve();
@@ -58,7 +58,7 @@ function runJob(node){
     const dataToSend = isBitIoImage ? currentJob.payload.image : currentJob.payload.toString();
     const jobType = isBitIoImage ? 'image' : 'scrolling-text';
 
-    console.log('jobType', jobType);
+    debug('jobType', jobType);
 
     executeMicrobitCommand(dataToSend, jobType, currentJob.payload.displayFor)
         .then(function(){
@@ -73,7 +73,7 @@ function runJob(node){
 
         })
         .catch(e => {
-            console.log('err:', e);
+            debug('err:', e);
 
             processRunning = false;
 
@@ -101,9 +101,9 @@ module.exports = function(RED) {
     
         node.on('input', function(msg) {
     
-            console.log('INPUT:', msg);
-            console.log(`There are ${jobs.length} that need to complete before this job is run.`);
-            console.log(`Adding job to queue`);
+            debug('INPUT:', msg);
+            debug(`There are ${jobs.length} that need to complete before this job is run.`);
+            debug(`Adding job to queue`);
     
             jobs.push(msg);
     
@@ -127,7 +127,7 @@ module.exports = function(RED) {
     
         node.on('input', function(msg) {
     
-            console.log('IMAGE-INPUT:', config);
+            debug('IMAGE-INPUT:', config);
             
             msg.payload = {};
             msg.payload.bitio_image = true;
@@ -149,7 +149,7 @@ module.exports = function(RED) {
                 const portNames = devices.map(device => device.comName);
                 res.send( JSON.stringify( { ports : portNames }) );
             })
-            .catch(err => console.log('There was an error getting the serial ports on this system:', err))
+            .catch(err => debug('There was an error getting the serial ports on this system:', err))
         ;
 
     });
