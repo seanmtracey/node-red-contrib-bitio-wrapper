@@ -91,8 +91,6 @@ module.exports = function(RED) {
     // Node for handling sending data to the bitio device.
     function handleBitioInput(config) {
 
-        debug('INPUT CONFIG', config);
-
         RED.nodes.createNode(this, config);
     
         var node = this;
