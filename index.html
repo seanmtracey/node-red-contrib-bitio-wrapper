@@ -9,6 +9,9 @@
             },
             serialport : {
                 value : ''
+            },
+            enablebuffer : {
+                value : true
             }
         },
         inputs:1,
@@ -74,6 +77,11 @@
                 <!--<option value="/dev/tty.usbmodemXXXX">/dev/tty.usbmodemXXXX</option>-->
         </select>
 
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-enablebuffer"><i class="icon-tag"></i>Enable Buffer?</label>
+        <input type="checkbox" checked="false" id="node-input-enablebuffer" />
     </div>
 
 </script>
