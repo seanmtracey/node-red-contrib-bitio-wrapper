@@ -104,9 +104,11 @@ module.exports = function(RED) {
             debug('INPUT:', msg);
             debug(`There are ${jobs.length} that need to complete before this job is run.`);
             debug(`Adding job to queue`);
-    
-            jobs.push(msg);
-    
+            
+            if(config.enablebuffer || ( !config.enablebuffer && jobs.length === 0 && !processRunning ) ){
+                jobs.push(msg);
+            }
+
             if(!processRunning && jobs.length > 0){
                 runJob(node);
             }
