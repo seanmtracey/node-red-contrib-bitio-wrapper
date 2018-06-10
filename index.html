@@ -92,6 +92,15 @@
 
 <!--bitio-image node for creating a custom image to display on the Microbit-->
 <script type="text/javascript">
+
+    function resetLEDs(){
+
+        Array.from( document.querySelectorAll('.microbit-image input[type="checkbox"]')).forEach( function( checkboxElement, idx ) {
+            checkboxElement.checked = false;
+        } );
+
+    }
+
     RED.nodes.registerType('bitio-image',{
         category: 'function',
         color: '#34b6ff',
@@ -120,7 +129,7 @@
                 var node = this;
 
                 $.ajax({
-                    url: "inject/"+this.id,
+                    url: "inject/" + this.id,
                     type:"POST",
                     success: function(resp) {
                         console.log('Injected. Resp:', resp);
@@ -142,6 +151,7 @@
             }
         },
         oneditprepare : function(){
+
             console.log(this);
             const LEDs = Array.from( document.querySelectorAll('.microbit-image input[type="checkbox"]'));
 
@@ -152,6 +162,11 @@
                     LEDs[idx].checked = true;
                 }
 
+            });
+
+            Array.from(document.querySelectorAll('.bitio-image-reset')).forEach(function(el){
+                el.removeEventListener('click', resetLEDs);
+                el.addEventListener('click', resetLEDs);
             });
 
         },
@@ -183,6 +198,7 @@
             display: flex;
             flex-wrap: wrap;
             padding: 2em;
+            justify-content: center;
         }
 
         .microbit-image .led-wrapper{
@@ -213,6 +229,19 @@
 
         .microbit-image span{
             flex-basis: 100%;
+        }
+
+        button.bitio-image-reset{
+            padding: 1em 2em;
+            background: #34b6ff;
+            border: 0 solid;
+            color: white;
+            margin-left: auto;
+            position: relative;
+            margin-right: auto;
+            font-weight: 800;
+            display: flex;
+            border-radius: 2px;
         }
 
     </style>
@@ -278,7 +307,10 @@
 
         </div>
 
+        <button class="bitio-image-reset">Reset LEDs</button>
+
     </div>
+
 
 </script>
 
