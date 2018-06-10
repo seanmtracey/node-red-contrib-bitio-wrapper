@@ -96,6 +96,7 @@ module.exports = function(RED) {
         var node = this;
         
         if(config.serialport !== ''){
+            debug('Writing serial port to portscan.cache file');
             fs.writeFileSync(`${__dirname}/portscan.cache`, config.serialport + '\n');
         }
     
